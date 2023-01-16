@@ -7,13 +7,13 @@ import time
 # Create an SQS client
 sqs = boto3.client('sqs')
 s3 = boto3.client('s3')
-sqs2 = boto3.resource('sqs')
+sqs_res = boto3.resource('sqs')
 
 
 # The URL of the SQS queue
 # queue_url = 'https://sqs.us-west-2.amazonaws.com/202009016751/My-first-Queue'
 
-queue = sqs2.get_queue_by_name(QueueName='My-first-Queue')
+queue = sqs_res.get_queue_by_name(QueueName='My-first-Queue')
 queue_url = queue.url
 
 while True:
@@ -42,7 +42,8 @@ while True:
     print(file_name)
     s3.download_file(bucket_name, file_name, f'/root/amr-playGround/microservices/{file_name}')
 
-    
+    #sleep time more than visability time out
+    # time.sleep(60)
     
     # Delete the message from the queue
     sqs.delete_message(QueueUrl=queue_url, ReceiptHandle=receipt_handle)
@@ -58,3 +59,4 @@ while True:
     
     #sleep for 1 min
     time.sleep(60)
+    
